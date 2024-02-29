@@ -1,5 +1,21 @@
 # History
 
+## 0.3.3
+- bump integration test to using Python3 instead Python2
+
+- bump base tox python to 3.10
+
+- bump gitactions checkout and setup-python versions
+
+- fix warning: 'cpp_std', 'tags' warnings.warn(msg)
+
+## 0.3.2
+- github-action: rename cicd_test.yml to tests.yml
+
+## 0.3.1
+- github-action: fix test branch to main
+
+
 ## 0.3.0
 
 - Update README.md.
