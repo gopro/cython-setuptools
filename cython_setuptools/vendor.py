@@ -142,6 +142,12 @@ def setup(original_setup_file: str, cythonize: bool = True, **kwargs):
 
         PROFILE_CYTHON=1 python setup.py build_ext --inplace
 
+    In addition it's possible to add also the CYTHON_TRACE environment variable
+    to enable line tracing in Cython for profiling::
+    ``CYTHON_TRACE`` environment variable::
+
+        CYTHON_TRACE=1 PROFILE_CYTHON=1 python setup.py build_ext --inplace``
+
     Debugging symbols can be added with::
 
         DEBUG=1 python setup.py build_ext --inplace
@@ -198,6 +204,15 @@ def create_cython_ext_modules(cython_modules, profile_cython=False, debug=False)
         if profile_cython:
             cython_directives = kwargs.setdefault("cython_directives", {})
             cython_directives["profile"] = True
+            cython_trace = _str_to_bool(os.environ.get("CYTHON_TRACE", False))
+            if cython_trace:
+                # Enable line tracing in Cython for profiling
+                cython_directives["linetrace"] = True
+                # Enable binding mode in Cython for C API access
+                cython_directives['binding'] = True
+                # Define the CYTHON_TRACE macro to enable tracing
+                define_macros = kwargs.setdefault("define_macros", [])
+                define_macros.append(('CYTHON_TRACE', '1'))
         if debug:
             for args_name in ("extra_compile_args", "extra_link_args"):
                 args = kwargs.setdefault(args_name, [])
