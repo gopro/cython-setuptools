@@ -11,7 +11,7 @@ name = "cython_setuptools"
 description = "Cython setuptools integration"
 dynamic = ["version"]
 readme = "README.md"
-requires-python = "~=3.7"
+requires-python = "~=3.8"
 keywords = ["cython", "setuptools"]
 authors = [{name = "Luper Rouch", email= "luper.rouch@gmail.com"}]
 maintainers = [{ name = "Marco Treglia", email = "mtreglia@gopro.com" }]
