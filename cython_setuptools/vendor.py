@@ -200,9 +200,9 @@ def create_cython_ext_modules(cython_modules, profile_cython=False, debug=False)
             cython_directives["profile"] = True
         if debug:
             args = kwargs.setdefault('extra_compile_args', [])
-            args.append('-g')
-        else:
-            # Do not add debug symbols if we are not in debug
+            args.append('/Zi' if get_default_compiler() == 'msvc' else '-g')
+        elif get_default_compiler() != 'msvc':
+            # Do not add debug symbols if we are not in debug (msvc has no -g0 equivalent)
             args = kwargs.setdefault('extra_compile_args', [])
             args.append('-g0')
         # Remove custom cython_setuptools options
