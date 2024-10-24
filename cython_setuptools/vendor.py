@@ -203,6 +203,10 @@ def create_cython_ext_modules(cython_modules, profile_cython=False, debug=False)
                 args = kwargs.setdefault(args_name, [])
                 if "-g" not in args:
                     args.append("-g")
+        else:
+            # Do not add debug symbols if we are not in debug
+            args = kwargs.setdefault('extra_compile_args', [])
+            args.append('-g0')
         # Remove custom cython_setuptools options
         if "cpp_std" in kwargs:
             del kwargs["cpp_std"]
