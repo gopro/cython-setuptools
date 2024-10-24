@@ -199,10 +199,8 @@ def create_cython_ext_modules(cython_modules, profile_cython=False, debug=False)
             cython_directives = kwargs.setdefault("cython_directives", {})
             cython_directives["profile"] = True
         if debug:
-            for args_name in ("extra_compile_args", "extra_link_args"):
-                args = kwargs.setdefault(args_name, [])
-                if "-g" not in args:
-                    args.append("-g")
+            args = kwargs.setdefault('extra_compile_args', [])
+            args.append('-g')
         else:
             # Do not add debug symbols if we are not in debug
             args = kwargs.setdefault('extra_compile_args', [])
