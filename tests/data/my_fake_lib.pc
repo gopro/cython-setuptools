@@ -1,0 +1,10 @@
+prefix=/tmp
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: my_fake_lib
+Description: A fake library
+Version: 0.0.1
+Libs: -L${libdir} -lmy_fake_lib
+Cflags: -I${includedir}
