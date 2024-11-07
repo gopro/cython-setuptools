@@ -15,7 +15,9 @@ requires-python = "~=3.8"
 keywords = ["cython", "setuptools"]
 authors = [{name = "Luper Rouch", email= "luper.rouch@gmail.com"}]
 maintainers = [{ name = "Marco Treglia", email = "mtreglia@gopro.com" }]
-dependencies = []
+dependencies = [
+    'pyserde[toml]'
+]
 classifiers = [
     "Framework :: Setuptools Plugin",
     "Topic :: Software Development :: Build Tools",
