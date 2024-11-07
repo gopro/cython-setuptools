@@ -1,0 +1,2 @@
+[cython_extensions.lol]
+sources = ["a.pyx"]
