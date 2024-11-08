@@ -1,5 +1,6 @@
 import os
 import os.path as op
+from pathlib import Path
 import shutil
 
 import cython_setuptools
@@ -9,7 +10,7 @@ this_dir = op.dirname(__file__)
 cython_setuptools_path = op.abspath(op.join(cython_setuptools.__file__, "..", ".."))
 
 
-def _setup_source(setup_name, tmp_path):
+def _setup_source(setup_name: str, tmp_path: Path):
     pypkg_dir = tmp_path / 'pypkg'
     src_dir = tmp_path / 'src'
     setup_path = pypkg_dir / 'setup.py'
@@ -19,7 +20,7 @@ def _setup_source(setup_name, tmp_path):
     return setup_path, pypkg_dir
 
 
-def test_compile_and_run_no_cythonize_mode(virtualenv, tmp_path):
+def test_compile_and_run_no_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-no-cythonize.py", tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.env.update({'CYTHONIZE': "1"})
@@ -27,7 +28,7 @@ def test_compile_and_run_no_cythonize_mode(virtualenv, tmp_path):
     assert int(virtualenv.run("python -m bar", capture=True)) == 2
 
 
-def test_compile_and_run_cythonize_mode(virtualenv, tmp_path):
+def test_compile_and_run_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-cythonize.py", tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.run(f"pip install -e {pypkg_dir}")
