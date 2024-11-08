@@ -16,7 +16,8 @@ keywords = ["cython", "setuptools"]
 authors = [{name = "Luper Rouch", email= "luper.rouch@gmail.com"}]
 maintainers = [{ name = "Marco Treglia", email = "mtreglia@gopro.com" }]
 dependencies = [
-    'pyserde[toml]'
+    "pyserde[toml]",
+    "cython==3.0.10",
 ]
 classifiers = [
     "Framework :: Setuptools Plugin",
