@@ -1,21 +1,20 @@
 import os
-import os.path as op
 from pathlib import Path
 import shutil
 
 import cython_setuptools
 
 
-this_dir = op.dirname(__file__)
-cython_setuptools_path = op.abspath(op.join(cython_setuptools.__file__, "..", ".."))
+this_dir = Path(__file__).parent
+cython_setuptools_path = Path(cython_setuptools.__file__, "..", "..").absolute()
 
 
 def _setup_source(setup_name: str, tmp_path: Path):
     pypkg_dir = tmp_path / 'pypkg'
     src_dir = tmp_path / 'src'
     setup_path = pypkg_dir / 'setup.py'
-    shutil.copytree(op.join(this_dir, 'pypkg'), str(pypkg_dir))
-    shutil.copytree(op.join(this_dir, 'src'), str(src_dir))
+    shutil.copytree(this_dir / 'pypkg', pypkg_dir)
+    shutil.copytree(this_dir / 'src', src_dir)
     os.symlink(pypkg_dir / setup_name, setup_path)
     return setup_path, pypkg_dir
 
