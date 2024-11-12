@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "wheel", "cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pypkg"
+version = "1.0.0"
+description = "pypkg is the tool to pypkg some pypkg using pypkg to use theses pypkg in pypkg"
+authors = []
+maintainers = []
+dependencies = []
+
+
+[option]
+packages = "find:"
+include_package_data = "true"
+zip_safe = "false"
+
+# The part that we need in our tests
+[cython_extensions.foo]
+sources = ["foo.pyx", "../src/foo.c"]
+include_dirs = ["../src"]
