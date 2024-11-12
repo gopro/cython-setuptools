@@ -1,5 +1,3 @@
-import os.path as op
-
 # FIXME
 # distutils is deprecated starting from python3.10
 # but the migration to setuptools is not completed
