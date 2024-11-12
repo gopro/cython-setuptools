@@ -7,17 +7,10 @@ import subprocess
 
 import setuptools
 
-# FIXME
-# distutils is deprecated starting from python3.10
-# but the migration to setuptools is not completed
-# this import will change in the future
-from setuptools._distutils.ccompiler import get_default_compiler
+from .common import C_EXT, CPP_EXT, CYTHON_EXT, convert_to_bool, get_cpp_std_flag
 
 DEFAULTS_SECTION = "cython-defaults"
 MODULE_SECTION_PREFIX = "cython-module:"
-CYTHON_EXT = ".pyx"
-C_EXT = ".c"
-CPP_EXT = ".cpp"
 
 
 def setup(original_setup_file: str, cythonize: bool = True, **kwargs):
@@ -149,9 +142,9 @@ def setup(original_setup_file: str, cythonize: bool = True, **kwargs):
     """
     this_dir = op.dirname(original_setup_file)
     setup_cfg_file = op.join(this_dir, "setup.cfg")
-    cythonize = _str_to_bool(os.environ.get("CYTHONIZE", cythonize))
-    profile_cython = _str_to_bool(os.environ.get("PROFILE_CYTHON", False))
-    debug = _str_to_bool(os.environ.get("DEBUG", False))
+    cythonize = convert_to_bool(os.environ.get("CYTHONIZE", cythonize))
+    profile_cython = convert_to_bool(os.environ.get("PROFILE_CYTHON", False))
+    debug = convert_to_bool(os.environ.get("DEBUG", False))
     if op.exists(setup_cfg_file):
         # Create Cython Extension objects
         with open(setup_cfg_file) as fp:
@@ -275,12 +268,6 @@ def _expand_cython_modules(config, cythonize, pkg_config, base_dir):
     return ret
 
 
-def _convert_cpp_std(version):
-    if get_default_compiler() == "msvc":
-        return f"/std:c++{version}"
-    return f"-std=c++{version}"
-
-
 def _expand_one_cython_module(config, section, cythonize, pkg_config, base_dir):
     (
         pc_include_dirs,
@@ -298,7 +285,7 @@ def _expand_one_cython_module(config, section, cythonize, pkg_config, base_dir):
     if module["language"] == "c++":
         cpp_std = _get_config_opt(config, section, "cpp_std", None)
         if cpp_std:
-            module["extra_compile_args"].append(_convert_cpp_std(cpp_std))
+            module["extra_compile_args"].append(get_cpp_std_flag(cpp_std))
     module["extra_link_args"] = (
         _get_config_list(config, section, "extra_link_args") + pc_extra_link_args
     )
@@ -411,14 +398,3 @@ def _get_config_list(config, section, option):
     except configparser.NoOptionError:
         value = ""
     return ("%s %s" % (defaults_value, value)).split()
-
-
-def _str_to_bool(value):
-    if isinstance(value, bool):
-        return value
-    value = value.lower()
-    if value in ("1", "on", "true", "yes"):
-        return True
-    elif value in ("0", "off", "false", "no"):
-        return False
-    raise ValueError("invalid boolean string %r" % value)
