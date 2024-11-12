@@ -3,6 +3,7 @@ Encapsulate the retrieval of information from the pyproject.toml
 """
 
 import os
+from typing import Any
 
 from serde import field, serde
 from serde.toml import from_toml
@@ -37,6 +38,23 @@ class CythonSetuptoolsOptions:
     cpp_std: int = 17
     pkg_config_packages: list[str] = field(default_factory=list)
     pkg_config_dirs: list[str] = field(default_factory=list)
+
+    def to_extension_kwargs(self) -> dict[str, Any]:
+        """
+        Helper function to return a dict that can be used to create an Extension
+        Note that before using this function, fields like ``cpp_std`` or ``pkg_config_packages``
+        should be used to fill extra elements in ``extra_compile_args`` and ``extra_link_args``
+
+        Returns:
+            A dict with the fields ``sources``, ``libraries``, ``include_dirs``, ``extra_compile_args``, ``extra_link_args``
+        """
+        return {
+            "sources": self.sources,
+            "libraries": self.libraries,
+            "include_dirs": self.include_dirs,
+            "extra_compile_args": self.extra_compile_args,
+            "extra_link_args": self.extra_link_args,
+        }
 
 
 @serde
