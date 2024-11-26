@@ -1,0 +1,32 @@
+# Some info that a real pyproject.toml could have
+# Even if in this case, we totally ignore it
+[build-system]
+requires = ["setuptools==75.2.0", "wheel==0.44.0", "cython_setuptools @ git+ssh://git@github.com/gopro/cython-setuptools", "cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plop"
+version = "1.0.0"
+description = "Bindings of C++ plop module"
+authors = []
+maintainers = []
+dependencies = []
+
+
+[option]
+packages = "find:"
+include_package_data = "true"
+zip_safe = "false"
+
+# The part that we need in our tests
+[cython_extensions.lol]
+sources = ["a.pyx"]
+libraries = ["a", "b"]
+include_dirs = ["toto/include"]
+library_dirs = ["toto/lib", "/usr/lib"]
+extra_compile_args = ["-g"]
+extra_link_args = ["--strip-debug"]
+langage = "c++"
+cpp_std = 23
+pkg_config_packages = ["super_lib"]
+pkg_config_dirs = ["toto/lib/pkgconfig"]
