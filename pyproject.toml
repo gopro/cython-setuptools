@@ -14,7 +14,10 @@ readme = "README.md"
 requires-python = "~=3.10"
 keywords = ["cython", "setuptools"]
 authors = [{name = "Luper Rouch", email= "luper.rouch@gmail.com"}]
-maintainers = [{ name = "Marco Treglia", email = "mtreglia@gopro.com" }]
+maintainers = [
+    { name = "Marco Treglia", email = "mtreglia@gopro.com" },
+    { name = "Lena Bertho", email = "lbertho@gopro.com" },
+]
 dependencies = [
     "pyserde[toml]",
     "cython==3.0.10",
