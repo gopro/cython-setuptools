@@ -1,0 +1,42 @@
+.cython_setuptools = [
+	Using(.buildConfig)
+	.name = 'cython_setuptools'
+	.buildTarget = '$name$$buildID$'
+	.repoDir = '$_WORKING_DIR_$/$_CURRENT_BFF_DIR_$'
+	.buildDir + '/$name$'
+]
+{
+	Using(.cython_setuptools)
+	.ExecInputPath = { .repoDir }
+	.ExecInputExcludePath = {
+		'$repoDir$/build'
+		'$repoDir$/cython_setuptools.egg-info'
+	}
+	Exec(.buildTarget)
+	{
+		.ExecInputExcludedFiles = {
+			'$repoDir$/build.bff'
+			'$repoDir$/cython_setuptools/_version.py'
+		}
+		.ExecInputPath = { .repoDir }
+		.ExecArguments	= '-m pip install'
+						+ ' $repoDir$'
+		.ExecOutput = '$buildDir$/build.result'
+		.ExecUseStdOutAsOutput = true
+		.ExecExecutable = .pythonExecutablePath
+		.PreBuildDependencies = { .venvTarget }
+		.ExecWorkingDir = .venvDir
+	}
+
+	RemoveDir('$buildTarget$Clear')
+	{
+		.RemovePaths = { .buildDir }
+	}
+
+	.projConfig = [
+		Using(.cython_setuptools)
+		.ProjectInputPaths = .ExecInputPath
+		.ProjectInputPathsExclude = .ExecInputExcludePath
+	]
+	makePCVCXProj(.projConfig)
+}
