@@ -1,9 +1,7 @@
-.cython_setuptools = [
-	Using(.buildConfig)
+.cython_setuptools = [ Using(.buildConfig)
 	.name = 'cython_setuptools'
-	.buildTarget = '$name$$buildID$'
+	.buildTarget + '/$name$'
 	.repoDir = '$_WORKING_DIR_$/$_CURRENT_BFF_DIR_$'
-	.buildDir + '/$name$'
 ]
 {
 	Using(.cython_setuptools)
@@ -12,31 +10,38 @@
 		'$repoDir$/build'
 		'$repoDir$/cython_setuptools.egg-info'
 	}
+	.ExecUseStdOutAsOutput = true
+	.ExecExecutable = .pythonExecutablePath
+	.ExecWorkingDir = .venvDir
 	Exec(.buildTarget)
 	{
 		.ExecInputExcludedFiles = {
 			'$repoDir$/build.bff'
 			'$repoDir$/cython_setuptools/_version.py'
 		}
-		.ExecInputPath = { .repoDir }
 		.ExecArguments	= '-m pip install'
 						+ ' $repoDir$'
-		.ExecOutput = '$buildDir$/build.result'
-		.ExecUseStdOutAsOutput = true
-		.ExecExecutable = .pythonExecutablePath
+		.ExecOutput = '$buildDir$/$buildTarget$/build.result'
 		.PreBuildDependencies = { .venvTarget }
-		.ExecWorkingDir = .venvDir
 	}
 
 	RemoveDir('$buildTarget$Clear')
 	{
-		.RemovePaths = { .buildDir }
+		.RemovePaths = { '$buildDir$/$buildTarget$' }
+	}
+
+	Exec('$buildTarget$Uninstall')
+	{
+		.ExecArguments	= '-m pip uninstall'
+						+ ' $repoDir$'
+		.ExecOutput = '$buildDir$/$buildTarget$/uninstall.result'
+		.PreBuildDependencies = { .venvTarget }
 	}
 
 	.projConfig = [
 		Using(.cython_setuptools)
 		.ProjectInputPaths = .ExecInputPath
 		.ProjectInputPathsExclude = .ExecInputExcludePath
-	]
+	] + .buildPC
 	makePCVCXProj(.projConfig)
 }
