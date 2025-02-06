@@ -42,6 +42,6 @@
 		Using(.cython_setuptools)
 		.ProjectInputPaths = .ExecInputPath
 		.ProjectInputPathsExclude = .ExecInputExcludePath
-	] + .buildPC
-	makePCVCXProj(.projConfig)
+	]
+	makeVCXProj(.projConfig)
 }
