@@ -54,6 +54,7 @@ class CythonSetuptoolsOptions:
             "include_dirs": self.include_dirs,
             "extra_compile_args": self.extra_compile_args,
             "extra_link_args": self.extra_link_args,
+            "language": self.language,
         }
 
 
