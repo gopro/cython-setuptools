@@ -36,7 +36,7 @@ def create_extensions(original_setup_file: str, cythonize: bool = True) -> list:
         # Extra arguments passed to the linker.
         extra_link_args = ["--strip-debug"]
         # Typically "c" or "c++".
-        langage = "c++"
+        language = "c++"
         # Typically "11", "14", "17" or "20".
         cpp_std = 23
         # A list of `pkg-config` package names to link with the module.
@@ -73,7 +73,7 @@ def create_extensions(original_setup_file: str, cythonize: bool = True) -> list:
 def _complete_cython_options(options: CythonSetuptoolsOptions, debug: bool, cythonize: bool):
     if debug and get_default_compiler() != "msvc":
         options.extra_compile_args.append("-g")
-    if options.langage == "c++":
+    if options.language == "c++":
         options.extra_compile_args.append(get_cpp_std_flag(options.cpp_std))
 
     # Get flags from pkg-config dependencies
@@ -83,7 +83,7 @@ def _complete_cython_options(options: CythonSetuptoolsOptions, debug: bool, cyth
 
     # Force to use already generated .c/.cpp files if cythonize is False
     if not cythonize:
-        new_ext = CPP_EXT if options.langage == "c++" else C_EXT
+        new_ext = CPP_EXT if options.language == "c++" else C_EXT
         new_sources = []
         for source in options.sources:
             source_path = Path(source)

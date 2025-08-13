@@ -9,7 +9,7 @@ def test_basic():
     pyproject = DATA_DIR / "basic_pyproject.toml"
     extensions = read_cython_setuptools_option(pyproject)
     assert extensions["lol"].sources == ["a.pyx"]
-    assert extensions["lol"].langage == "c"
+    assert extensions["lol"].language == "c"
     assert extensions["lol"].cpp_std == 17
 
 
@@ -23,7 +23,7 @@ def test_all_fields():
         library_dirs=["toto/lib", "/usr/lib"],
         extra_compile_args=["-g"],
         extra_link_args=["--strip-debug"],
-        langage="c++",
+        language="c++",
         cpp_std=23,
         pkg_config_packages=["super_lib"],
         pkg_config_dirs=["toto/lib/pkgconfig"],

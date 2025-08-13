@@ -34,7 +34,7 @@ class CythonSetuptoolsOptions:
     library_dirs: list[str] = field(default_factory=list)
     extra_compile_args: list[str] = field(default_factory=list)
     extra_link_args: list[str] = field(default_factory=list)
-    langage: str = "c"
+    language: str = "c"
     cpp_std: int = 17
     pkg_config_packages: list[str] = field(default_factory=list)
     pkg_config_dirs: list[str] = field(default_factory=list)
