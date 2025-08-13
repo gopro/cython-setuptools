@@ -7,6 +7,7 @@ import cython_setuptools
 
 this_dir = Path(__file__).parent
 cython_setuptools_path = Path(cython_setuptools.__file__, "..", "..").absolute()
+bar_py_path = this_dir / "pypkg" / "bar.py"
 
 
 def _setup_source(setup_name: str, pyproject_name: str | None, tmp_path: Path):
@@ -25,25 +26,25 @@ def test_compile_and_run_no_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-no-cythonize.py", None, tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
-    assert int(virtualenv.run("python -m bar", capture=True)) == 2
+    assert int(virtualenv.run(f"python {bar_py_path}", capture=True)) == 2
 
 
 def test_compile_and_run_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-cythonize.py", None, tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
-    assert int(virtualenv.run("python -m bar", capture=True)) == 2
+    assert int(virtualenv.run(f"python {bar_py_path}", capture=True)) == 2
 
 
 def test_compile_and_run_cythonize_mode_pyproject(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-cythonize-pyproject.py", "pyproject-mypkg.toml", tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
-    assert int(virtualenv.run("python -m bar", capture=True)) == 2
+    assert int(virtualenv.run(f"python {bar_py_path}", capture=True)) == 2
 
 
 def test_compile_and_run_no_cythonize_mode_pyproject(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-no-cythonize-pyproject.py", "pyproject-mypkg.toml", tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
     virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
-    assert int(virtualenv.run("python -m bar", capture=True)) == 2
+    assert int(virtualenv.run(f"python {bar_py_path}", capture=True)) == 2
