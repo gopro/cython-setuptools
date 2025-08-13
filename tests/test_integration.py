@@ -24,14 +24,14 @@ def _setup_source(setup_name: str, pyproject_name: str | None, tmp_path: Path):
 def test_compile_and_run_no_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-no-cythonize.py", None, tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
-    virtualenv.run(f"pip install -e {pypkg_dir}")
+    virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
     assert int(virtualenv.run("python -m bar", capture=True)) == 2
 
 
 def test_compile_and_run_cythonize_mode(virtualenv, tmp_path: Path):
     setup_path, pypkg_dir = _setup_source("setup-cythonize.py", None, tmp_path)
     virtualenv.run(f"pip install {cython_setuptools_path}")
-    virtualenv.run(f"pip install -e {pypkg_dir}")
+    virtualenv.run(f"pip install -e {pypkg_dir} --no-build-isolation")
     assert int(virtualenv.run("python -m bar", capture=True)) == 2
 
 
