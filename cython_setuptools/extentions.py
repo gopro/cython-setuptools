@@ -96,6 +96,8 @@ def _compute_cythonize(extensions_options: dict[str, CythonSetuptoolsOptions], c
 
 
 def _read_pyx_file_hash_from_generated_files(generated_file_path: Path) -> str:
+    if not generated_file_path.exists():
+        return ""
     with open(generated_file_path, 'r', encoding='utf8') as f:
         content = f.read()
     match = re.search(r'^// input_hash: ([a-fA-F0-9]+)$', content, re.MULTILINE)
