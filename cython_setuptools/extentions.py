@@ -152,4 +152,5 @@ def _complete_cython_options(options: CythonSetuptoolsOptions, debug: bool, cyth
 
 def _create_extension(name: str, options: CythonSetuptoolsOptions, profile_cython: bool) -> Cython.Distutils.Extension:
     cython_directives = {"profile": True} if profile_cython else {}
-    return Cython.Distutils.Extension(name=name, cython_directives=cython_directives, **options.to_extension_kwargs())
+    extension_name = name if options.name is None else options.name
+    return Cython.Distutils.Extension(name=extension_name, cython_directives=cython_directives, **options.to_extension_kwargs())
