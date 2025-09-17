@@ -16,6 +16,7 @@ class CythonSetuptoolsOptions:
 
     Attributes:
         sources: The list of Cython and C/C++ source files that are compiled to build the module.
+        name: Override the name of the extention
         libraries: A list of libraries to link with the module.
         include_dirs: A list of directories to find include files.
         library_dirs: A list of directories to find libraries.
@@ -29,6 +30,7 @@ class CythonSetuptoolsOptions:
             (extends the `PKG_CONFIG_PATH` environment variable).
     """
     sources: list[str]
+    name: str | None = None
     libraries: list[str] = field(default_factory=list)
     include_dirs: list[str] = field(default_factory=list)
     library_dirs: list[str] = field(default_factory=list)
