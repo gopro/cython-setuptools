@@ -71,11 +71,38 @@ def create_extensions(original_setup_file: str, cythonize: bool | None = None) -
         _complete_cython_options(options, debug, cythonize)
         extensions.append(_create_extension(name, options, profile_cython))
     if cythonize:
-        cythonized_extensions = Cython.Build.cythonize(extensions, force=True)
+        include_path = _collect_cython_include_path(extensions)
+        cythonized_extensions = Cython.Build.cythonize(extensions, force=True, include_path=include_path)
         for options in extensions_options.values():
             _add_pyx_file_hash_to_generated_files(options)
         return cythonized_extensions
     return extensions
+
+
+def _collect_cython_include_path(extensions) -> list[str]:
+    """
+    Collect the directories Cython searches when resolving ``cimport`` (its
+    ``include_path``), so a producer package can ship shared ``.pxd`` declarations
+    next to its C/C++ headers (e.g. installed at ``<prefix>/include/mypkg/foo.pxd``)
+    and consumers can ``cimport mypkg.foo`` without the producing package being
+    importable at build time -- which does not work under PEP 517 build isolation.
+
+    The directories come from each extension's ``include_dirs`` plus the ``-I``
+    entries pulled from pkg-config into ``extra_compile_args``.
+    """
+    include_path: list[str] = []
+
+    def add(directory: str):
+        if directory and directory not in include_path:
+            include_path.append(directory)
+
+    for extension in extensions:
+        for include_dir in getattr(extension, "include_dirs", None) or []:
+            add(include_dir)
+        for flag in getattr(extension, "extra_compile_args", None) or []:
+            if flag.startswith("-I"):
+                add(flag[2:])
+    return include_path
 
 
 def _compute_cythonize(extensions_options: dict[str, CythonSetuptoolsOptions], cythonize_arg: bool | None) -> bool:
