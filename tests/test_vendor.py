@@ -1,6 +1,27 @@
 from six import StringIO
+import pytest
 
 from cython_setuptools import vendor
+
+
+@pytest.mark.parametrize("trace", [None, "0", "1"])
+def test_profile_cython_trace(monkeypatch, trace):
+    if trace is None:
+        monkeypatch.delenv("CYTHON_TRACE", raising=False)
+    else:
+        monkeypatch.setenv("CYTHON_TRACE", trace)
+    extensions = vendor.create_cython_ext_modules(
+        {"example": {"sources": ["example.pyx"]}}, profile_cython=True
+    )
+    extension = extensions[0]
+    assert extension.cython_directives["profile"] is True
+    if trace == "1":
+        assert extension.cython_directives["linetrace"] is True
+        assert extension.cython_directives["binding"] is True
+        assert ("CYTHON_TRACE", "1") in extension.define_macros
+    else:
+        assert not extension.cython_directives.get("linetrace", False)
+        assert ("CYTHON_TRACE", "1") not in extension.define_macros
 
 
 def test_parse_all_module_opts():
