@@ -1,8 +1,22 @@
 from pathlib import Path
 
+from cython_setuptools.extentions import create_extensions
 from cython_setuptools.pyproject import CythonSetuptoolsOptions, read_cython_setuptools_option
 
 DATA_DIR = Path(__file__).parent / "data"
+
+
+def test_library_dirs_reach_extension(tmp_path):
+    (tmp_path / "pyproject.toml").write_text(
+        '[cython_extensions.example]\n'
+        'sources = ["example.c"]\n'
+        'libraries = ["custom"]\n'
+        'library_dirs = ["vendor/lib", "other/lib"]\n'
+    )
+    extensions = create_extensions(str(tmp_path / "setup.py"), cythonize=False)
+    assert len(extensions) == 1
+    assert extensions[0].library_dirs == ["vendor/lib", "other/lib"]
+    assert extensions[0].libraries == ["custom"]
 
 
 def test_basic():
