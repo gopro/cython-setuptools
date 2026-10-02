@@ -197,7 +197,7 @@ def create_cython_ext_modules(cython_modules, profile_cython=False, debug=False)
         if profile_cython:
             cython_directives = kwargs.setdefault("cython_directives", {})
             cython_directives["profile"] = True
-            cython_trace = _str_to_bool(os.environ.get("CYTHON_TRACE", False))
+            cython_trace = convert_to_bool(os.environ.get("CYTHON_TRACE", False))
             if cython_trace:
                 # Enable line tracing in Cython for profiling
                 cython_directives["linetrace"] = True
